@@ -33,45 +33,45 @@ setup: ## Первоначальная настройка проекта
 
 start: ## Запустить все сервисы
 	@echo "$(GREEN)Запуск сервисов NocoDB...$(NC)"
-	@docker-compose -f $(COMPOSE_FILE) up -d
+	@docker compose -f $(COMPOSE_FILE) up -d
 	@echo "$(GREEN)Сервисы запущены!$(NC)"
 	@echo "$(YELLOW)NocoDB доступен по адресу: http://localhost:8080$(NC)"
 
 stop: ## Остановить все сервисы
 	@echo "$(YELLOW)Остановка сервисов...$(NC)"
-	@docker-compose -f $(COMPOSE_FILE) down
+	@docker compose -f $(COMPOSE_FILE) down
 	@echo "$(GREEN)Сервисы остановлены$(NC)"
 
 restart: ## Перезапустить все сервисы
 	@echo "$(YELLOW)Перезапуск сервисов...$(NC)"
-	@docker-compose -f $(COMPOSE_FILE) restart
+	@docker compose -f $(COMPOSE_FILE) restart
 	@echo "$(GREEN)Сервисы перезапущены$(NC)"
 
 logs: ## Показать логи всех сервисов
-	@docker-compose -f $(COMPOSE_FILE) logs -f
+	@docker compose -f $(COMPOSE_FILE) logs -f
 
 logs-nocodb: ## Показать логи только NocoDB
-	@docker-compose -f $(COMPOSE_FILE) logs -f nocodb
+	@docker compose -f $(COMPOSE_FILE) logs -f nocodb
 
 logs-mysql: ## Показать логи только MySQL
-	@docker-compose -f $(COMPOSE_FILE) logs -f mysql
+	@docker compose -f $(COMPOSE_FILE) logs -f mysql
 
 status: ## Показать статус сервисов
 	@echo "$(GREEN)Статус сервисов:$(NC)"
-	@docker-compose -f $(COMPOSE_FILE) ps
+	@docker compose -f $(COMPOSE_FILE) ps
 
 status-detailed: ## Показать детальный статус с ресурсами
 	@echo "$(GREEN)Детальный статус сервисов:$(NC)"
-	@docker-compose -f $(COMPOSE_FILE) ps
+	@docker compose -f $(COMPOSE_FILE) ps
 	@echo ""
 	@echo "$(GREEN)Использование ресурсов:$(NC)"
-	@docker stats --no-stream --format "table {{.Container}}\t{{.CPUPerc}}\t{{.MemUsage}}\t{{.NetIO}}\t{{.BlockIO}}" $$(docker-compose -f $(COMPOSE_FILE) ps -q)
+	@docker stats --no-stream --format "table {{.Container}}\t{{.CPUPerc}}\t{{.MemUsage}}\t{{.NetIO}}\t{{.BlockIO}}" $$(docker compose -f $(COMPOSE_FILE) ps -q)
 
 clean: ## Остановить и удалить все контейнеры, тома и сети
 	@echo "$(RED)ВНИМАНИЕ: Это удалит ВСЕ данные!$(NC)"
 	@read -p "Вы уверены? (y/N): " confirm && [ "$$confirm" = "y" ] || exit 1
 	@echo "$(YELLOW)Остановка и удаление сервисов...$(NC)"
-	@docker-compose -f $(COMPOSE_FILE) down -v --remove-orphans
+	@docker compose -f $(COMPOSE_FILE) down -v --remove-orphans
 	@echo "$(GREEN)Очистка завершена$(NC)"
 
 clean-volumes: ## Удалить только тома данных (сохранить контейнеры)
@@ -102,14 +102,14 @@ restore: ## Восстановить базу данных из резервно
 
 update: ## Обновить образы Docker
 	@echo "$(GREEN)Обновление образов Docker...$(NC)"
-	@docker-compose -f $(COMPOSE_FILE) pull
+	@docker compose -f $(COMPOSE_FILE) pull
 	@echo "$(GREEN)Образы обновлены$(NC)"
 	@echo "$(YELLOW)Для применения обновлений выполните: make restart$(NC)"
 
 update-and-restart: ## Обновить образы и перезапустить сервисы
 	@echo "$(GREEN)Обновление и перезапуск...$(NC)"
-	@docker-compose -f $(COMPOSE_FILE) pull
-	@docker-compose -f $(COMPOSE_FILE) up -d
+	@docker compose -f $(COMPOSE_FILE) pull
+	@docker compose -f $(COMPOSE_FILE) up -d
 	@echo "$(GREEN)Обновление и перезапуск завершены$(NC)"
 
 shell-nocodb: ## Подключиться к контейнеру NocoDB
@@ -133,7 +133,7 @@ monitor: ## Мониторинг ресурсов в реальном време
 
 dev: ## Запуск в режиме разработки с выводом логов
 	@echo "$(GREEN)Запуск в режиме разработки...$(NC)"
-	@docker-compose -f $(COMPOSE_FILE) up
+	@docker compose -f $(COMPOSE_FILE) up
 
 # Команда по умолчанию
 .DEFAULT_GOAL := help
