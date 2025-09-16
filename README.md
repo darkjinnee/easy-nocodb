@@ -27,7 +27,7 @@
 ### 1. Клонирование репозитория
 
 ```bash
-git clone <your-repo-url>
+git clone https://github.com/darkjinnee/easy-nocodb.git
 cd nocodb
 ```
 
