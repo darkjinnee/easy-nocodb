@@ -1,0 +1,45 @@
+services:
+  nocodb:
+    env_file: .env
+    image: "nocodb/nocodb:latest"
+    container_name: nocodb
+    environment:
+      NC_DB: "mysql2://${MYSQL_HOST}:${MYSQL_PORT}?u=${MYSQL_USER}&p=${MYSQL_PASSWORD}&d=${MYSQL_DATABASE}"
+      NC_ADMIN_EMAIL: ${NC_ADMIN_EMAIL}
+      NC_ADMIN_PASSWORD: ${NC_ADMIN_PASSWORD}
+    volumes:
+      - nocodb_data:/usr/app/data
+    ports:
+      - "8080:8080"
+    restart: unless-stopped
+    depends_on:
+      mysql:
+        condition: service_healthy
+
+  mysql:
+    env_file: .env
+    image: "mysql:8.3.0"
+    container_name: mysql
+    environment:
+      MYSQL_DATABASE: ${MYSQL_DATABASE}
+      MYSQL_PASSWORD: ${MYSQL_PASSWORD}
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
+      MYSQL_USER: ${MYSQL_USER}
+    volumes:
+      - mysql_data:/var/lib/mysql
+    healthcheck:
+      retries: 10
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
+      timeout: 20s
+    restart: unless-stopped
+
+volumes:
+  nocodb_data:
+    name: nocodb_data
+  mysql_data:
+    name: mysql_data
+
+networks:
+  default:
+    external: true
+    name: nocodb
